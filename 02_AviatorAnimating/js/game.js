@@ -12,6 +12,9 @@ window.addEventListener("load", init, false);
 function init() {
     // set up the scene, the camera and the renderer
     createScene();
+
+    createLights();
+    createSea();
 }
 
 let scene, camera, WIDTH, HEIGHT;
@@ -53,4 +56,50 @@ function handleWindowResize() {
     renderer.setSize(WIDTH, HEIGHT);
     camera.aspect = WIDTH / HEIGHT;
     camera.updateProjectionMatrix();
+}
+
+let hemisphereLight, shadowLight;
+function createLights() {
+    hemisphereLight = new THREE.HemisphereLight(0xaaaaaa, 0x000000, 0.9);
+
+    shadowLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    shadowLight.position.set(150, 350, 350);
+
+    shadowLight.castShadow = true;
+
+    shadowLight.shadow.camera.left = -400;
+    shadowLight.shadow.camera.right = 400;
+    shadowLight.shadow.camera.top = 400;
+    shadowLight.shadow.camera.bottom = 400;
+    shadowLight.shadow.camera.near = 1;
+    shadowLight.shadow.camera.far = 1000;
+
+    shadowLight.shadow.mapSize.width = 2048;
+    shadowLight.shadow.mapSize.height = 2048;
+
+    scene.add(hemisphereLight);
+    scene.add(shadowLight);
+}
+
+Sea = function () {
+    let geom = new THREE.CylinderGeometry(600, 600, 800, 40, 10);
+    geom.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PY / 2));
+
+    let mat = new THREE.MeshPhongMaterial({
+        color: Colors.blue,
+        transparent: true,
+        opacity: 0.6,
+        shading: THREE.FlatShading,
+    });
+
+    this.mesh = new THREE.Mesh(geom, mat);
+    this.mesh.receiveShadow = true;
+};
+
+let sea;
+
+function createSea() {
+    sea = new Sea();
+    sea.mesh.position.y = -600;
+    scene.add(sea.mesh);
 }
