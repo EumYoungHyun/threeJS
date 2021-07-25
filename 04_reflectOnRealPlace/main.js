@@ -16,4 +16,11 @@ function init() {
   renderer.setSize(window.innerWidth, window.innerHeight);
 
   document.body.appendChild(renderer.domElement);
+
+  let controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableZoom = false;
+
+  renderer.render(scene, camera);
 }
+
+init();
