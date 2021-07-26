@@ -20,7 +20,24 @@ function init() {
   let controls = new OrbitControls(camera, renderer.domElement);
   controls.enableZoom = false;
 
-  renderer.render(scene, camera);
+  const urls = [
+    "images/posx.jpg",
+    "images/negx.jpg",
+    "images/posy.jpg",
+    "images/negy.jpg",
+    "images/posz.jpg",
+    "images/negz.jpg",
+  ];
+
+  let loader = new THREE.CubeTextureLoader();
+  scene.background = loader.load(urls);
+
+  function render() {
+    renderer.render(scene, camera);
+    requestAnimationFrame(render);
+  }
+
+  render();
 }
 
 init();
